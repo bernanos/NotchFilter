@@ -49,7 +49,7 @@ extern "C" EXPORT int getPluginInfo(int index, Plugin::PluginInfo* info)
         info->type = Plugin::PLUGIN_TYPE_PROCESSOR;
         info->processor.name = "Bandpass Filter";
         info->processor.type = Plugin::FilterProcessor;
-        info->processor.creator = &(Plugin::createProcessor<FilterNode>);
+        info->processor.creator = &(Plugin::createProcessor<NotchFilterNode>);
         break;
     default:
         return -1;
