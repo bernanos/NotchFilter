@@ -64,8 +64,8 @@ public:
 private:
     void setFilterParameters (double, double, int);
 
-    Array<double> lowCuts;
-    Array<double> highCuts;
+    Array<double> centreFreq;
+    Array<double> width;
 
     OwnedArray<Dsp::Filter> filters;
     Array<bool> shouldFilterChannel;
@@ -75,7 +75,7 @@ private:
     double defaultCentreFreq;
     double defaultWidth;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FilterNode);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NotchFilterNode);
 };
 
 #endif  // __NOTCHFILTERNODE_H_CED428E__

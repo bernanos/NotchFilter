@@ -21,8 +21,8 @@
 */
 
 #include <stdio.h>
-#include "NotchNotchFilterNode.h"
-#include "NotchNotchFilterEditor.h"
+#include "NotchFilterNode.h"
+#include "NotchFilterEditor.h"
 
 
 NotchFilterNode::NotchFilterNode()
@@ -135,12 +135,12 @@ void NotchFilterNode::updateSettings()
         // SO fixed this. I think values were never restored correctly because you cleared CentreFreq.
         Array<double> oldCentreFreq;
         Array<double> oldWidth;
-        oldCentreFreq = CentreFreq;
-        oldWidth = Width;
+        oldCentreFreq = centreFreq;
+        oldWidth = width;
 
         filters.clear();
-        CentreFreq.clear();
-        Width.clear();
+        centreFreq.clear();
+        width.clear();
         shouldFilterChannel.clear();
 
         for (int n = 0; n < getNumInputs(); ++n)
@@ -175,8 +175,8 @@ void NotchFilterNode::updateSettings()
                 newWidth = defaultWidth;
             }
 
-            CentreFreq.add  (newCentreFreq);
-            Width.add (newWidth);
+            centreFreq.add  (newCentreFreq);
+            width.add (newWidth);
 
             setFilterParameters (newCentreFreq, newWidth, n);
         }
@@ -188,13 +188,13 @@ void NotchFilterNode::updateSettings()
 
 double NotchFilterNode::getCentreFreqValueForChannel (int chan) const
 {
-    return CentreFreq[chan];
+    return centreFreq[chan];
 }
 
 
 double NotchFilterNode::getWidthValueForChannel (int chan) const
 {
-    return Width[chan];
+    return width[chan];
 }
 
 
@@ -212,7 +212,7 @@ void NotchFilterNode::setFilterParameters (double CentreFreq, double Width, int 
     Dsp::Params params;
     params[0] = dataChannelArray[chan]->getSampleRate(); // sample rate
     params[1] = 2;                          // order
-    params[2] = CentreFreq);                // center frequency
+    params[2] = CentreFreq;                // center frequency
     params[3] = Width;                      // bandwidth
 
     if (filters.size() > chan)
@@ -229,15 +229,15 @@ void NotchFilterNode::setParameter (int parameterIndex, float newValue)
 
         if (parameterIndex == 0)
         {
-            CentreFreq.set (currentChannel,newValue);
+            centreFreq.set (currentChannel,newValue);
         }
         else if (parameterIndex == 1)
         {
-            Width.set (currentChannel,newValue);
+            width.set (currentChannel,newValue);
         }
 
-        setFilterParameters (CentreFreq[currentChannel],
-                             Width[currentChannel],
+        setFilterParameters (centreFreq[currentChannel],
+                             width[currentChannel],
                              currentChannel);
 
         editor->updateParameterButtons (parameterIndex);
@@ -292,13 +292,13 @@ void NotchFilterNode::saveCustomChannelParametersToXml(XmlElement* channelInfo, 
 {
     if (channelType == InfoObjectCommon::DATA_CHANNEL
         && channelNumber > -1
-        && channelNumber < Width.size())
+        && channelNumber < width.size())
     {
         //std::cout << "Saving custom parameters for filter node." << std::endl;
 
         XmlElement* channelParams = channelInfo->createNewChildElement ("PARAMETERS");
-        channelParams->setAttribute ("Width",         Width[channelNumber]);
-        channelParams->setAttribute ("CentreFreq",          CentreFreq[channelNumber]);
+        channelParams->setAttribute ("Width",         width[channelNumber]);
+        channelParams->setAttribute ("CentreFreq",          centreFreq[channelNumber]);
         channelParams->setAttribute ("shouldFilter",    shouldFilterChannel[channelNumber]);
     }
 }
@@ -317,11 +317,11 @@ void NotchFilterNode::loadCustomChannelParametersFromXml(XmlElement* channelInfo
         {
             if (subNode->hasTagName ("PARAMETERS"))
             {
-                Width.set (channelNum, subNode->getDoubleAttribute ("Width", defaultWidth));
-                CentreFreq.set  (channelNum, subNode->getDoubleAttribute ("CentreFreq",  defaultCentreFreq));
+                width.set (channelNum, subNode->getDoubleAttribute ("Width", defaultWidth));
+                centreFreq.set  (channelNum, subNode->getDoubleAttribute ("CentreFreq",  defaultCentreFreq));
                 shouldFilterChannel.set (channelNum, subNode->getBoolAttribute ("shouldFilter", true));
 
-                setFilterParameters (CentreFreq[channelNum], Width[channelNum], channelNum);
+                setFilterParameters (centreFreq[channelNum], width[channelNum], channelNum);
             }
         }
     }

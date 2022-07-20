@@ -139,7 +139,7 @@ void NotchFilterEditor::labelTextChanged(Label* label)
 
         if (label == widthValue)
         {
-            double minVal = fn->getcentreFreqValueForChannel(chans[n]);
+            double minVal = fn->getCentreFreqValueForChannel(chans[n]);
 
             if (requestedValue > minVal)
             {
@@ -152,7 +152,7 @@ void NotchFilterEditor::labelTextChanged(Label* label)
         }
         else
         {
-            double maxVal = fn->getwidthValueForChannel(chans[n]);
+            double maxVal = fn->getWidthValueForChannel(chans[n]);
 
             if (requestedValue < maxVal)
             {
@@ -171,8 +171,8 @@ void NotchFilterEditor::channelChanged (int channel, bool /*newState*/)
 {
     NotchFilterNode* fn = (NotchFilterNode*) getProcessor();
 
-    widthValue->setText (String (fn->getwidthValueForChannel (channel)), dontSendNotification);
-    centreFreqValue->setText  (String (fn->getcentreFreqValueForChannel  (channel)), dontSendNotification);
+    widthValue->setText (String (fn->getWidthValueForChannel (channel)), dontSendNotification);
+    centreFreqValue->setText  (String (fn->getCentreFreqValueForChannel  (channel)), dontSendNotification);
     applyFilterOnChan->setToggleState (fn->getBypassStatusForChannel (channel), dontSendNotification);
 
 }
